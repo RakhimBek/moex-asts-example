@@ -40,3 +40,18 @@ publishing {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+jar {
+    jar.archiveFileName = 'test.jar'
+
+    manifest {
+        attributes(
+          'Main-Class': 'example.com.Main'
+        )
+    }
+
+    fileTree("lib/").each {
+        println(it);
+        from(zipTree(file(it)))
+    }
+}
