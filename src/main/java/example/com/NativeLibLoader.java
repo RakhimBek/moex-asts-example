@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public final class NativeLibLoader {
 
+	private final List<String> libExtensions = Arrays.asList(".so", ".dll", ".lib");
 	private final String osname = System.getProperty("os.name").toLowerCase(Locale.US).trim().replaceAll("[^a-z0-9]+", "");
 	private final String osarch = System.getProperty("os.arch").toLowerCase(Locale.US).trim();
 
@@ -45,29 +46,29 @@ public final class NativeLibLoader {
 				.orElse(Collections.emptyList());
 
 		for (String fileName : fileNames) {
-
-			final String filePath = path.concat(fileName);
-			System.out.println(filePath);
-			System.load(filePath);
+			if (isLibExtension(fileName)) {
+				final String filePath = path.concat(fileName);
+				System.out.println(filePath);
+				System.load(filePath);
+			}
 		}
 		System.out.println();
 	}
 
-	private boolean isWindows() {
-		return osname.startsWith("windows");
+	private boolean isLibExtension(String fileName) {
+		for (String extension : libExtensions) {
+			if (fileName.endsWith(extension)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private String getNativesResourcesPath(String libFolder) {
-		final StringBuilder pathBuilder = new StringBuilder(libFolder);
-		if (isWindows()) {
-			if ("x86".equals(osarch)) {
-				pathBuilder.append("win32/");
-			} else {
-				pathBuilder.append("win64/");
-			}
-		} else {
-			pathBuilder.append("linux/");
-		}
-		return pathBuilder.toString();
+		final String folder = osname.startsWith("windows") ? "win" : "linux";
+		final String suffix = osarch.contains("64") ? "64" : "32";
+		System.out.println(libFolder + folder + suffix);
+		return libFolder + folder + suffix + "/";
 	}
 }
