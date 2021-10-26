@@ -1,19 +1,19 @@
 package example.com;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
+import static java.nio.file.Files.createTempDirectory;
 
 public final class NativeLibLoader {
 
-	private final List<String> libExtensions = Arrays.asList(".so", ".dll", ".lib");
 	private final String osname = System.getProperty("os.name").toLowerCase(Locale.US).trim().replaceAll("[^a-z0-9]+", "");
 	private final String osarch = System.getProperty("os.arch").toLowerCase(Locale.US).trim();
 
@@ -30,42 +30,46 @@ public final class NativeLibLoader {
 		return AccessController.doPrivileged((PrivilegedAction<ClassLoader>) NativeLibLoader.class::getClassLoader);
 	}
 
-	public void loadFolder(String libFolder) {
+	public void loadFolder(String libFolder, String libName) throws IOException {
+		final String resourcesPath = getNativeResourcesPath(libFolder);
+		final String nativeLibName = System.mapLibraryName(libName);
+		final String filePath = resourcesPath.concat(nativeLibName);
+		System.out.println(filePath);
 
-		final String resourcesPath = getNativesResourcesPath(libFolder);
-		final ClassLoader classLoader = getClassLoader();
+		final File temporaryFile = extract(filePath, nativeLibName);
+		System.load(temporaryFile.getPath());
 
-		final URL resource = classLoader.getResource(resourcesPath);
-		if (resource == null) {
-			throw new IllegalArgumentException("Cannot find resource path " + resourcesPath);
-		}
-
-		final String path = resource.getPath();
-		final List<String> fileNames = Optional.ofNullable(new File(path).list())
-				.map(Arrays::asList)
-				.orElse(Collections.emptyList());
-
-		for (String fileName : fileNames) {
-			if (isLibExtension(fileName)) {
-				final String filePath = path.concat(fileName);
-				System.out.println(filePath);
-				System.load(filePath);
-			}
-		}
 		System.out.println();
 	}
 
-	private boolean isLibExtension(String fileName) {
-		for (String extension : libExtensions) {
-			if (fileName.endsWith(extension)) {
-				return true;
+	private File extract(String resource, String nativeLibName) throws IOException {
+		final ClassLoader classLoader = getClassLoader();
+		final URL url = classLoader.getResource(resource);
+		if (url == null) {
+			throw new UnsatisfiedLinkError("Failed to load " + resource);
+		}
+
+		final File output = createTempDirectory(nativeLibName)
+				.resolve(nativeLibName)
+				.toFile();
+
+		try (
+				final InputStream source = url.openStream();
+				final OutputStream target = new FileOutputStream(output)
+		) {
+			final byte[] buffer = new byte[8192];
+			int length;
+			while ((length = source.read(buffer)) > 0) {
+				target.write(buffer, 0, length);
 			}
 		}
 
-		return false;
+		output.deleteOnExit();
+		return output;
+
 	}
 
-	private String getNativesResourcesPath(String libFolder) {
+	private String getNativeResourcesPath(String libFolder) {
 		final String folder = osname.startsWith("windows") ? "win" : "linux";
 		final String suffix = osarch.contains("64") ? "64" : "32";
 		System.out.println(libFolder + folder + suffix);

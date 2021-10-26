@@ -3,14 +3,17 @@ package example.com;
 import com.micex.client.Client;
 import com.micex.client.ClientException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-	public static void main(String[] args) throws ClientException {
+	public static void main(String[] args) throws ClientException, IOException {
 		final NativeLibLoader loader = new NativeLibLoader();
-		loader.loadFolder("natives/embedded/");
-		loader.loadFolder("natives/mtejni/");
+		loader.loadFolder("natives/embedded/", "mtesrl");
+		loader.loadFolder("natives/embedded/", "mustang");
+		loader.loadFolder("natives/embedded/", "tsmr");
+		loader.loadFolder("natives/mtejni/", "mtejni");
 
 		System.setProperty("com.moex.asts.mtejni.load", "false");
 
