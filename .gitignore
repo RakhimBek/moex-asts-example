@@ -2,3 +2,5 @@
 /.idea/
 /asts.iml
 /log/
+/.gradle/
+/build/
