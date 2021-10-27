@@ -1,5 +1,6 @@
 package example.com;
 
+import com.micex.client.API;
 import com.micex.client.Client;
 import com.micex.client.ClientException;
 
@@ -36,6 +37,8 @@ public class Main {
 		final Client client = new Client();
 		client.start(params);
 
+		final API.ServerInfo serverInfo = client.getServerInfo();
+		System.out.printf("user: %s, system: %s, server: %s%n", serverInfo.userID, serverInfo.systemID, serverInfo.sessionID);
 		System.out.println("end.");
 	}
 
