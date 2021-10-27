@@ -1,11 +1,20 @@
 package example.com;
 
 import com.micex.client.API;
+import com.micex.client.Binder;
 import com.micex.client.Client;
 import com.micex.client.ClientException;
+import com.micex.client.Filler;
+import com.micex.client.Meta;
+import com.micex.client.Parser;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -39,6 +48,16 @@ public class Main {
 
 		final API.ServerInfo serverInfo = client.getServerInfo();
 		System.out.printf("user: %s, system: %s, server: %s%n", serverInfo.userID, serverInfo.systemID, serverInfo.sessionID);
+
+
+		client.selectBoards(Collections.singleton("TQBR"));
+
+		final Meta.Market marketInfo = client.getMarketInfo();
+		System.out.printf("name: %s %s%n", marketInfo.name(), marketInfo.description());
+
+		final Meta.Message securitiesMessage = marketInfo.tables().find(Meta.TableType.Securities);
+
+
 		System.out.println("end.");
 	}
 
