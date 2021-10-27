@@ -57,7 +57,7 @@ public class Main {
 
 		final Meta.Message securitiesMessage = marketInfo.tables().find(Meta.TableType.Securities);
 
-
+		client.close();
 		System.out.println("end.");
 	}
 
