@@ -126,7 +126,7 @@ public final class NativeLibLoader {
 			}
 		}
 
-		//output.deleteOnExit();
+		output.deleteOnExit();
 		return output;
 
 	}
