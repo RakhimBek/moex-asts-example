@@ -139,13 +139,6 @@ public final class NativeLibLoader {
 		return osarch.contains("64");
 	}
 
-	private String getNativeResourcesPath(String libFolder) {
-		final String folder = osname.startsWith("windows") ? "win" : "linux";
-		final String suffix = osarch.contains("64") ? "64" : "32";
-		System.out.println(libFolder + folder + suffix);
-		return libFolder + folder + suffix + "/";
-	}
-
 	public enum Mode {
 		EMBEDDED,
 		MTESRL,
