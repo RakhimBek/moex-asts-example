@@ -22,16 +22,12 @@ import java.util.regex.Pattern;
 import static java.nio.file.Files.createTempDirectory;
 
 public final class NativeLibLoader {
-	final Pattern pattern = Pattern.compile(".+/([^/]+)$");
-
+	private final Pattern pattern = Pattern.compile(".+/([^/]+)$");
 	private final Path tempDirectory = createTempDirectory("MOEX_LIBS");
-	private final String osname = System.getProperty("os.name").toLowerCase(Locale.US).trim().replaceAll("[^a-z0-9]+", "");
-	private final String osarch = System.getProperty("os.arch").toLowerCase(Locale.US).trim();
+	private final boolean isWindows = System.getProperty("os.name").toLowerCase(Locale.US).contains("windows");
+	private final boolean is64 = System.getProperty("os.arch").contains("64");
 
 	public NativeLibLoader() throws IOException {
-		System.out.printf("osarch: %s%n", osname);
-		System.out.printf("osname: %s%n", osarch);
-		System.out.println();
 	}
 
 	private static ClassLoader getClassLoader() {
@@ -89,7 +85,7 @@ public final class NativeLibLoader {
 	}
 
 	private List<String> getPathList(PlatformLibsDescription libs) {
-		if (isWindows()) {
+		if (isWindows) {
 			return getPathList(libs.getWindows());
 		} else {
 			return getPathList(libs.getLinux());
@@ -97,7 +93,7 @@ public final class NativeLibLoader {
 	}
 
 	private List<String> getPathList(PlatformDescription description) {
-		if (is64()) {
+		if (is64) {
 			return description.getArch64();
 		} else {
 			return description.getArch32();
@@ -129,14 +125,6 @@ public final class NativeLibLoader {
 		output.deleteOnExit();
 		return output;
 
-	}
-
-	private boolean isWindows() {
-		return osname.startsWith("windows");
-	}
-
-	private boolean is64() {
-		return osarch.contains("64");
 	}
 
 	public enum Mode {
