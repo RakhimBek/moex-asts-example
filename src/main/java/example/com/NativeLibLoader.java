@@ -93,7 +93,7 @@ public final class NativeLibLoader {
 		return libFolder + folder + suffix + "/";
 	}
 
-	private enum Mode {
+	public enum Mode {
 		EMBEDDED,
 		MTESRL,
 	}
@@ -120,41 +120,44 @@ public final class NativeLibLoader {
 	}
 
 	public static class PlatformLibs {
-		private List<String> linux32;
-		private List<String> linux64;
-		private List<String> windows32;
-		private List<String> windows64;
+		private PlatformDescription linux;
+		private PlatformDescription windows;
 
-		public List<String> getLinux32() {
-			return linux32;
+		public PlatformDescription getLinux() {
+			return linux;
 		}
 
-		public void setLinux32(final List<String> linux32) {
-			this.linux32 = linux32;
+		public void setLinux(final PlatformDescription linux) {
+			this.linux = linux;
 		}
 
-		public List<String> getLinux64() {
-			return linux64;
+		public PlatformDescription getWindows() {
+			return windows;
 		}
 
-		public void setLinux64(final List<String> linux64) {
-			this.linux64 = linux64;
+		public void setWindows(final PlatformDescription windows) {
+			this.windows = windows;
+		}
+	}
+
+	public static class PlatformDescription {
+		private List<String> arch32;
+		private List<String> arch64;
+
+		public List<String> getArch32() {
+			return arch32;
 		}
 
-		public List<String> getWindows32() {
-			return windows32;
+		public void setArch32(final List<String> arch32) {
+			this.arch32 = arch32;
 		}
 
-		public void setWindows32(final List<String> windows32) {
-			this.windows32 = windows32;
+		public List<String> getArch64() {
+			return arch64;
 		}
 
-		public List<String> getWindows64() {
-			return windows64;
-		}
-
-		public void setWindows64(final List<String> windows64) {
-			this.windows64 = windows64;
+		public void setArch64(final List<String> arch64) {
+			this.arch64 = arch64;
 		}
 	}
 }
