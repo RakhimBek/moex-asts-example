@@ -4,7 +4,6 @@
 
 plugins {
     id 'java'
-    id 'maven-publish'
 }
 
 repositories {
@@ -28,18 +27,6 @@ group = 'example.com'
 version = '1.0-SNAPSHOT'
 description = 'asts'
 sourceCompatibility = '1.8'
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
 
 jar {
     jar.archiveFileName = 'test.jar'
