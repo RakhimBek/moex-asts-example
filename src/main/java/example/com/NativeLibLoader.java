@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Locale;
@@ -14,10 +15,11 @@ import static java.nio.file.Files.createTempDirectory;
 
 public final class NativeLibLoader {
 
+	private final Path tempDirectory = createTempDirectory("MOEX_LIBS");
 	private final String osname = System.getProperty("os.name").toLowerCase(Locale.US).trim().replaceAll("[^a-z0-9]+", "");
 	private final String osarch = System.getProperty("os.arch").toLowerCase(Locale.US).trim();
 
-	public NativeLibLoader() {
+	public NativeLibLoader() throws IOException {
 		System.out.printf("osarch: %s%n", osname);
 		System.out.printf("osname: %s%n", osarch);
 		System.out.println();
@@ -49,7 +51,7 @@ public final class NativeLibLoader {
 			throw new UnsatisfiedLinkError("Failed to load " + resource);
 		}
 
-		final File output = createTempDirectory(nativeLibName)
+		final File output = tempDirectory
 				.resolve(nativeLibName)
 				.toFile();
 
