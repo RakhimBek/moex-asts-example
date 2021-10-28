@@ -12,13 +12,17 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.file.Files.createTempDirectory;
 
 public final class NativeLibLoader {
+	final Pattern pattern = Pattern.compile(".+/([^/]+)$");
 
 	private final Path tempDirectory = createTempDirectory("MOEX_LIBS");
 	private final String osname = System.getProperty("os.name").toLowerCase(Locale.US).trim().replaceAll("[^a-z0-9]+", "");
@@ -47,16 +51,57 @@ public final class NativeLibLoader {
 		}
 	}
 
-	public void loadFolder(String libFolder, String libName) throws IOException {
-		final String resourcesPath = getNativeResourcesPath(libFolder);
-		final String nativeLibName = System.mapLibraryName(libName);
-		final String filePath = resourcesPath.concat(nativeLibName);
-		System.out.println(filePath);
+	public void load() throws IOException {
+		final LibsDescription libsDescription = readDescription();
+		final PlatformLibsDescription mtejniLibsDescription = libsDescription.getMtejni();
+		final PlatformLibsDescription embeddedLibsDescription = libsDescription.getModes().get(Mode.EMBEDDED);
 
-		final File temporaryFile = extract(filePath, nativeLibName);
-		System.load(temporaryFile.getPath());
+		final List<String> mtejniLibs = getPathList(mtejniLibsDescription);
+		final List<String> embeddedLibs = getPathList(embeddedLibsDescription);
+		for (String path : extract(mtejniLibs, embeddedLibs)) {
+			try {
+				System.load(path);
+				System.out.printf("loaded: %s", path);
+			} catch (UnsatisfiedLinkError e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 
-		System.out.println();
+	private List<String> extract(List<String> mtejniLibs, List<String> embeddedLibs) throws IOException {
+		final List<String> fsPathList = new ArrayList<>();
+
+		for (String path : embeddedLibs) {
+			fsPathList.add(extract(path, getLibName(path)).getPath());
+		}
+
+		for (String path : mtejniLibs) {
+			fsPathList.add(extract(path, getLibName(path)).getPath());
+		}
+
+		return fsPathList;
+	}
+
+	private String getLibName(String resourcePath) {
+		final Matcher matcher = pattern.matcher(resourcePath);
+		matcher.matches();
+		return matcher.group(1);
+	}
+
+	private List<String> getPathList(PlatformLibsDescription libs) {
+		if (isWindows()) {
+			return getPathList(libs.getWindows());
+		} else {
+			return getPathList(libs.getLinux());
+		}
+	}
+
+	private List<String> getPathList(PlatformDescription description) {
+		if (is64()) {
+			return description.getArch64();
+		} else {
+			return description.getArch32();
+		}
 	}
 
 	private File extract(String resource, String nativeLibName) throws IOException {
@@ -81,9 +126,17 @@ public final class NativeLibLoader {
 			}
 		}
 
-		output.deleteOnExit();
+		//output.deleteOnExit();
 		return output;
 
+	}
+
+	private boolean isWindows() {
+		return osname.startsWith("windows");
+	}
+
+	private boolean is64() {
+		return osarch.contains("64");
 	}
 
 	private String getNativeResourcesPath(String libFolder) {
@@ -99,27 +152,27 @@ public final class NativeLibLoader {
 	}
 
 	public static class LibsDescription {
-		private Map<Mode, PlatformLibs> modes;
-		private PlatformLibs mtejni;
+		private Map<Mode, PlatformLibsDescription> modes;
+		private PlatformLibsDescription mtejni;
 
-		public Map<Mode, PlatformLibs> getModes() {
+		public Map<Mode, PlatformLibsDescription> getModes() {
 			return modes;
 		}
 
-		public void setModes(final Map<Mode, PlatformLibs> modes) {
+		public void setModes(final Map<Mode, PlatformLibsDescription> modes) {
 			this.modes = modes;
 		}
 
-		public PlatformLibs getMtejni() {
+		public PlatformLibsDescription getMtejni() {
 			return mtejni;
 		}
 
-		public void setMtejni(final PlatformLibs mtejni) {
+		public void setMtejni(final PlatformLibsDescription mtejni) {
 			this.mtejni = mtejni;
 		}
 	}
 
-	public static class PlatformLibs {
+	public static class PlatformLibsDescription {
 		private PlatformDescription linux;
 		private PlatformDescription windows;
 

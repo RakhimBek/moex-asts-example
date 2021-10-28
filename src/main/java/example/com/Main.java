@@ -13,10 +13,7 @@ import java.util.Map;
 public class Main {
 	public static void main(String[] args) throws ClientException, IOException {
 		final NativeLibLoader loader = new NativeLibLoader();
-		loader.loadFolder("natives/embedded/", "mtesrl");
-		loader.loadFolder("natives/embedded/", "mustang");
-		loader.loadFolder("natives/embedded/", "tsmr");
-		loader.loadFolder("natives/mtejni/", "mtejni");
+		loader.load();
 
 		System.setProperty("com.moex.asts.mtejni.load", "false");
 
