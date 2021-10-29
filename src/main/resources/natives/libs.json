@@ -1,0 +1,73 @@
+{
+  "modes": {
+    "EMBEDDED": {
+      "linux": {
+        "arch32": [
+          "natives/embedded/linux32/libmtesrl.so",
+          "natives/embedded/linux32/libmustang.so",
+          "natives/embedded/linux32/libtsmr.so"
+        ],
+        "arch64": [
+          "natives/embedded/linux64/libmtesrl.so",
+          "natives/embedded/linux64/libmustang.so",
+          "natives/embedded/linux64/libtsmr.so"
+        ]
+      },
+      "windows": {
+        "arch32": [
+          "natives/embedded/win32/mtesrl.dll",
+          "natives/embedded/win32/mtesrl.lib",
+          "natives/embedded/win32/mustang32.dll",
+          "natives/embedded/win32/tsmr.dll"
+        ],
+        "arch64": [
+          "natives/embedded/win64/mtesrl64.dll",
+          "natives/embedded/win64/mtesrl64.lib",
+          "natives/embedded/win64/mustang64.dll",
+          "natives/embedded/win64/tsmr64.dll"
+        ]
+      }
+    },
+    "MTESRL": {
+      "linux": {
+        "arch32": [
+          "natives/mtesrl/linux32/libmtesrl.so"
+        ],
+        "arch64": [
+          "natives/mtesrl/linux64/libmtesrl.so"
+        ]
+      },
+      "windows": {
+        "arch32": [
+          "natives/mtesrl/win32/mtesrl.dll",
+          "natives/mtesrl/win32/mtesrl.lib",
+          "natives/mtesrl/win32/rsecconn.dll"
+        ],
+        "arch64": [
+          "natives/mtesrl/win64/bzip2.dll",
+          "natives/mtesrl/win64/mtesrl64.dll",
+          "natives/mtesrl/win64/mtesrl64.lib",
+          "natives/mtesrl/win64/rsecconn.dll"
+        ]
+      }
+    }
+  },
+  "mtejni": {
+    "linux": {
+      "arch32": [
+        "natives/mtejni/linux32/libmtejni.so"
+      ],
+      "arch64": [
+        "natives/mtejni/linux64/libmtejni.so"
+      ]
+    },
+    "windows": {
+      "arch32": [
+        "natives/mtejni/win32/mtejni.dll"
+      ],
+      "arch64": [
+        "natives/mtejni/win64/mtejni.dll"
+      ]
+    }
+  }
+}

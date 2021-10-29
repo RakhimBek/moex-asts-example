@@ -1,5 +1,7 @@
 package example.com;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -7,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
@@ -22,6 +25,7 @@ import java.util.regex.Pattern;
 import static java.nio.file.Files.createTempDirectory;
 
 public final class NativeLibLoader {
+	private final Gson gson = new GsonBuilder().create();
 	private final Pattern pattern = Pattern.compile(".+/([^/]+)$");
 	private final Path tempDirectory = createTempDirectory("MOEX_LIBS");
 	private final boolean isWindows = System.getProperty("os.name").toLowerCase(Locale.US).contains("windows");
@@ -37,7 +41,7 @@ public final class NativeLibLoader {
 		return AccessController.doPrivileged((PrivilegedAction<ClassLoader>) NativeLibLoader.class::getClassLoader);
 	}
 
-	private LibsDescription readDescription() throws IOException {
+	private LibsDescription readDescriptionYaml() throws IOException {
 		final Constructor constructor = new Constructor(LibsDescription.class);
 		final Yaml yaml = new Yaml(constructor);
 		final ClassLoader classLoader = getClassLoader();
@@ -47,8 +51,19 @@ public final class NativeLibLoader {
 		}
 	}
 
+	private LibsDescription readDescriptionJSON() throws IOException {
+		final ClassLoader classLoader = getClassLoader();
+
+		try (
+				final InputStream inputStream = classLoader.getResourceAsStream("natives/libs.json");
+				final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		) {
+			return gson.fromJson(inputStreamReader, LibsDescription.class);
+		}
+	}
+
 	public void load() throws IOException {
-		final LibsDescription libsDescription = readDescription();
+		final LibsDescription libsDescription = readDescriptionJSON();
 		final PlatformLibsDescription mtejniLibsDescription = libsDescription.getMtejni();
 		final PlatformLibsDescription embeddedLibsDescription = libsDescription.getModes().get(Mode.EMBEDDED);
 
