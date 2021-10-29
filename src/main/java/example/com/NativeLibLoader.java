@@ -52,8 +52,8 @@ public final class NativeLibLoader {
 		final PlatformLibsDescription mtejniLibsDescription = libsDescription.getMtejni();
 		final PlatformLibsDescription embeddedLibsDescription = libsDescription.getModes().get(Mode.EMBEDDED);
 
-		final List<String> mtejniLibs = getPathList(mtejniLibsDescription);
-		final List<String> embeddedLibs = getPathList(embeddedLibsDescription);
+		final List<String> mtejniLibs = getResourceList(mtejniLibsDescription);
+		final List<String> embeddedLibs = getResourceList(embeddedLibsDescription);
 		for (String path : extract(mtejniLibs, embeddedLibs)) {
 			try {
 				System.load(path);
@@ -84,15 +84,15 @@ public final class NativeLibLoader {
 		return matcher.group(1);
 	}
 
-	private List<String> getPathList(PlatformLibsDescription libs) {
+	private List<String> getResourceList(PlatformLibsDescription libs) {
 		if (isWindows) {
-			return getPathList(libs.getWindows());
+			return getResourceList(libs.getWindows());
 		} else {
-			return getPathList(libs.getLinux());
+			return getResourceList(libs.getLinux());
 		}
 	}
 
-	private List<String> getPathList(PlatformDescription description) {
+	private List<String> getResourceList(PlatformDescription description) {
 		if (is64) {
 			return description.getArch64();
 		} else {
