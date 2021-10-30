@@ -72,9 +72,9 @@ public final class NativeLibLoader {
 		for (String path : extract(mtejniLibs, embeddedLibs)) {
 			try {
 				System.load(path);
-				System.out.printf("loaded: %s", path);
+				System.out.printf("NativeLibLoader.load. '%s' - OK%n", path);
 			} catch (UnsatisfiedLinkError e) {
-				System.out.println(e.getMessage());
+				System.out.printf("NativeLibLoader.load: '%s' - %s%n", path, e.getMessage());
 			}
 		}
 	}
