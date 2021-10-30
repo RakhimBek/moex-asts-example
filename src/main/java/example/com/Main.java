@@ -26,7 +26,7 @@ public class Main {
 		params.put("UserID", "***");
 		params.put("Password", "***");
 		params.put("Language", "English");
-		params.put("LogFolder", "./log/");
+		params.put("LogFolder", "/log/");
 		params.put("Logging", "4,2");
 		params.put("LogLevel", "30");
 		show(params);
