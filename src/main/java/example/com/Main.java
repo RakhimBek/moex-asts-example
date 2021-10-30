@@ -18,17 +18,17 @@ public class Main {
 		System.setProperty("com.moex.asts.mtejni.load", "false");
 
 		final Map<String, String> params = new HashMap<>();
-		params.put("PacketSize", "60000");
-		params.put("Interface", "IFCBroker40");
-		params.put("Server", "UAT_GATEWAY");
-		params.put("Service", "16411/16412");
-		params.put("Broadcast", "91.208.232.211");
-		params.put("UserID", "***");
-		params.put("Password", "***");
-		params.put("Language", "English");
-		params.put("LogFolder", "/log/");
-		params.put("Logging", "4,2");
-		params.put("LogLevel", "30");
+		params.put("PACKETSIZE", "60000");
+		params.put("INTERFACE", "IFCBroker40");
+		params.put("SERVER", "UAT_GATEWAY");
+		params.put("SERVICE", "16411/16412");
+		params.put("BROADCAST", "91.208.232.211");
+		params.put("USERID", "***");
+		params.put("PASSWORD", "***");
+		params.put("LANGUAGE", "English");
+		params.put("LOGFOLDER", "/log/");
+		params.put("LOGGING", "4,2");
+		params.put("LOGLEVEL", "30");
 		show(params);
 
 		System.out.println("start.");
