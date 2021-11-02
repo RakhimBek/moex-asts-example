@@ -31,7 +31,7 @@ modes:
         - path: natives/embedded/win64/mtesrl64.lib
           enabled: true
         - path: natives/embedded/win64/mustang64.dll
-          enabled: true
+          enabled: false
         - path: natives/embedded/win64/tsmr64.dll
           enabled: true
   MTESRL:
