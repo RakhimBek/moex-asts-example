@@ -2,48 +2,75 @@ modes:
   EMBEDDED:
     linux:
       arch32:
-        - natives/embedded/linux32/libmtesrl.so
-        - natives/embedded/linux32/libmustang.so
-        - natives/embedded/linux32/libtsmr.so
+        - path: natives/embedded/linux32/libmtesrl.so
+          enabled: true
+        - path: natives/embedded/linux32/libmustang.so
+          enabled: true
+        - path: natives/embedded/linux32/libtsmr.so
+          enabled: true
       arch64:
-        - natives/embedded/linux64/libmtesrl.so
-        - natives/embedded/linux64/libmustang.so
-        - natives/embedded/linux64/libtsmr.so
+        - path: natives/embedded/linux64/libmtesrl.so
+          enabled: true
+        - path: natives/embedded/linux64/libmustang.so
+          enabled: true
+        - path: natives/embedded/linux64/libtsmr.so
+          enabled: true
     windows:
       arch32:
-        - natives/embedded/win32/mtesrl.dll
-        - natives/embedded/win32/mtesrl.lib
-        - natives/embedded/win32/mustang32.dll
-        - natives/embedded/win32/tsmr.dll
+        - path: natives/embedded/win32/mtesrl.dll
+          enabled: true
+        - path: natives/embedded/win32/mtesrl.lib
+          enabled: true
+        - path: natives/embedded/win32/mustang32.dll
+          enabled: true
+        - path: natives/embedded/win32/tsmr.dll
+          enabled: true
       arch64:
-        - natives/embedded/win64/mtesrl64.dll
-        - natives/embedded/win64/mtesrl64.lib
-        - natives/embedded/win64/mustang64.dll
-        - natives/embedded/win64/tsmr64.dll
+        - path: natives/embedded/win64/mtesrl64.dll
+          enabled: true
+        - path: natives/embedded/win64/mtesrl64.lib
+          enabled: true
+        - path: natives/embedded/win64/mustang64.dll
+          enabled: true
+        - path: natives/embedded/win64/tsmr64.dll
+          enabled: true
   MTESRL:
     linux:
       arch32:
-        - natives/mtesrl/linux32/libmtesrl.so
+        - path: natives/mtesrl/linux32/libmtesrl.so
+          enabled: true
       arch64:
-        - natives/mtesrl/linux64/libmtesrl.so
+        - path: natives/mtesrl/linux64/libmtesrl.so
+          enabled: true
     windows:
       arch32:
-        - natives/mtesrl/win32/mtesrl.dll
-        - natives/mtesrl/win32/mtesrl.lib
-        - natives/mtesrl/win32/rsecconn.dll
+        - path: natives/mtesrl/win32/mtesrl.dll
+          enabled: true
+        - path: natives/mtesrl/win32/mtesrl.lib
+          enabled: true
+        - path: natives/mtesrl/win32/rsecconn.dll
+          enabled: true
       arch64:
-        - natives/mtesrl/win64/bzip2.dll
-        - natives/mtesrl/win64/mtesrl64.dll
-        - natives/mtesrl/win64/mtesrl64.lib
-        - natives/mtesrl/win64/rsecconn.dll
+        - path: natives/mtesrl/win64/bzip2.dll
+          enabled: true
+        - path: natives/mtesrl/win64/mtesrl64.dll
+          enabled: true
+        - path: natives/mtesrl/win64/mtesrl64.lib
+          enabled: true
+        - path: natives/mtesrl/win64/rsecconn.dll
+          enabled: true
 mtejni:
   linux:
     arch32:
-      - natives/mtejni/linux32/libmtejni.so
+      - path: natives/mtejni/linux32/libmtejni.so
+        enabled: true
     arch64:
-      - natives/mtejni/linux64/libmtejni.so
+      - path: natives/mtejni/linux64/libmtejni.so
+        enabled: true
   windows:
     arch32:
-      - natives/mtejni/win32/mtejni.dll
+      - path: natives/mtejni/win32/mtejni.dll
+        enabled: true
     arch64:
-      - natives/mtejni/win64/mtejni.dll
+      - path: natives/mtejni/win64/mtejni.dll
+        enabled: true

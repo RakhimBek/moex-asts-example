@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Files.createTempDirectory;
 
@@ -109,9 +110,15 @@ public final class NativeLibLoader {
 
 	private List<String> getResourceList(PlatformDescription description) {
 		if (is64) {
-			return description.getArch64();
+			return description.getArch64().stream()
+					.filter(LibDescription::isEnabled)
+					.map(LibDescription::getPath)
+					.collect(Collectors.toList());
 		} else {
-			return description.getArch32();
+			return description.getArch32().stream()
+					.filter(LibDescription::isEnabled)
+					.map(LibDescription::getPath)
+					.collect(Collectors.toList());
 		}
 	}
 
@@ -190,23 +197,44 @@ public final class NativeLibLoader {
 	}
 
 	public static class PlatformDescription {
-		private List<String> arch32;
-		private List<String> arch64;
+		private List<LibDescription> arch32;
+		private List<LibDescription> arch64;
 
-		public List<String> getArch32() {
+		public List<LibDescription> getArch32() {
 			return arch32;
 		}
 
-		public void setArch32(final List<String> arch32) {
+		public void setArch32(final List<LibDescription> arch32) {
 			this.arch32 = arch32;
 		}
 
-		public List<String> getArch64() {
+		public List<LibDescription> getArch64() {
 			return arch64;
 		}
 
-		public void setArch64(final List<String> arch64) {
+		public void setArch64(final List<LibDescription> arch64) {
 			this.arch64 = arch64;
+		}
+	}
+
+	public static class LibDescription {
+		private String path;
+		private boolean enabled;
+
+		public String getPath() {
+			return path;
+		}
+
+		public void setPath(final String path) {
+			this.path = path;
+		}
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(final boolean enabled) {
+			this.enabled = enabled;
 		}
 	}
 }
