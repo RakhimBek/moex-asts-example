@@ -23,7 +23,7 @@
           },
           {
             "path": "natives/embedded/linux64/libmustang.so",
-            "enabled": true
+            "enabled": false
           },
           {
             "path": "natives/embedded/linux64/libtsmr.so",
