@@ -4,6 +4,7 @@ import com.micex.client.API;
 import com.micex.client.Client;
 import com.micex.client.ClientException;
 import com.micex.client.Meta;
+import com.micex.client.Parser;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -46,6 +47,9 @@ public class Main {
 		System.out.printf("name: %s %s%n", marketInfo.name(), marketInfo.description());
 
 		final Meta.Message securitiesMessage = marketInfo.tables().find(Meta.TableType.Securities);
+
+		final Parser parser = client.open(securitiesMessage.name(), Collections.emptyMap(), true);
+		parser.execute(new BinderImpl());
 
 		client.close();
 		System.out.println("end.");
