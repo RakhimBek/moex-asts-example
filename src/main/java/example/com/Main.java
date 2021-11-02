@@ -30,6 +30,10 @@ public class Main {
 		params.put("LOGFOLDER", "/log/");
 		params.put("LOGGING", "4,2");
 		params.put("LOGLEVEL", "30");
+
+		// BOARDS список режимов, с которыми будет работать пользователь, например: “TQBR,TQOB,PSEQ”
+		// params.put("BOARDS", "TQBR,TQOB,PSEQ");
+		// либо client.selectBoards()
 		show(params);
 
 		System.out.println("start.");
