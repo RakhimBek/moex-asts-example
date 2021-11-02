@@ -64,7 +64,7 @@ public final class NativeLibLoader {
 	}
 
 	public void load() throws IOException {
-		final LibsDescription libsDescription = readDescriptionJSON();
+		final LibsDescription libsDescription = readDescriptionYaml();
 		final PlatformLibsDescription mtejniLibsDescription = libsDescription.getMtejni();
 		final PlatformLibsDescription embeddedLibsDescription = libsDescription.getModes().get(Mode.EMBEDDED);
 
