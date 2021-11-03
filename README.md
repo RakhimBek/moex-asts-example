@@ -1,4 +1,10 @@
 # moex-asts-example
+#
+#### Для запуска в Docker:
+```
+sh ./run.sh
+```
+#
 
 #### MOEX official documentation and examples:
 
