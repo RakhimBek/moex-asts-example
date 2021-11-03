@@ -3,7 +3,11 @@ package example.com;
 import com.micex.client.Filler;
 import com.micex.client.Meta;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SecuritiesFiller implements Filler {
+	final Set<String> fields = new HashSet<>();
 	int recordDecimals;
 
 	@Override
@@ -15,6 +19,8 @@ public class SecuritiesFiller implements Filler {
 	@Override
 	public void doneTableUpdate(final Meta.Message message) {
 		System.out.printf("doneTableUpdate: %s%n", message.name());
+
+		fields.stream().sorted().forEach(System.out::println);
 	}
 
 	@Override
@@ -45,6 +51,7 @@ public class SecuritiesFiller implements Filler {
 		if (o == null) {
 			System.out.printf("setKeyValue: %s - null%n", field.name());
 		} else {
+			fields.add(field.name());
 			System.out.printf("setKeyValue: %s - %s(%s)%n", field.name(), o, o.getClass());
 		}
 	}
@@ -54,6 +61,7 @@ public class SecuritiesFiller implements Filler {
 		if (o == null) {
 			System.out.printf("setFieldValue: %s - null%n", field.name());
 		} else {
+			fields.add(field.name());
 			System.out.printf("setFieldValue: %s - %s (%s)%n", field.name(), o, o.getClass());
 		}
 	}
