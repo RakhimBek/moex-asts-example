@@ -26,6 +26,8 @@ group = 'example.com'
 version = '1.0-SNAPSHOT'
 description = 'asts'
 sourceCompatibility = '1.8'
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
 jar {
     jar.archiveFileName = 'test.jar'
