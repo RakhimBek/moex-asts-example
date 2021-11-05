@@ -42,6 +42,8 @@ public class SecuritiesFiller implements Filler {
 		System.out.println(System.getProperty("file.encoding"));
 
 		try {
+			fileWriter.write("key");
+			fileWriter.write("\t");
 			fileWriter.write(String.join("\t", fields));
 			fileWriter.write(String.format("%n"));
 		} catch (IOException e) {
