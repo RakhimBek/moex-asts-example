@@ -24,7 +24,6 @@ public class SecuritiesFiller implements Filler {
 	private final Map<String, String> currentKeys = new LinkedHashMap<>();
 	final Set<String> fields = new HashSet<>();
 	private int currentRecordDecimals;
-	private String currentKey;
 	private Record currentRecord;
 
 	public SecuritiesFiller() throws IOException {
@@ -64,6 +63,8 @@ public class SecuritiesFiller implements Filler {
 					.collect(Collectors.joining("\t"));
 
 			try {
+				fileWriter.write(key);
+				fileWriter.write("\t");
 				fileWriter.write(csvRow);
 				fileWriter.write(String.format("%n"));
 			} catch (IOException e) {
@@ -74,7 +75,7 @@ public class SecuritiesFiller implements Filler {
 
 	@Override
 	public boolean initRecordUpdate(final Meta.Message message) {
-		this.currentKey = currentKeys.entrySet().stream()
+		final String currentKey = currentKeys.entrySet().stream()
 				.sorted(Map.Entry.comparingByKey())
 				.map(Map.Entry::getValue)
 				.collect(Collectors.joining("-"));
