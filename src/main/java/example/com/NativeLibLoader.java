@@ -2,6 +2,7 @@ package example.com;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static java.nio.file.Files.createTempDirectory;
 
+@Slf4j
 public final class NativeLibLoader {
 	private final Gson gson = new GsonBuilder().create();
 	private final Pattern pattern = Pattern.compile(".+/([^/]+)$");
@@ -73,9 +75,9 @@ public final class NativeLibLoader {
 		for (String path : extract(mtejniLibs, embeddedLibs)) {
 			try {
 				System.load(path);
-				System.out.printf("NativeLibLoader.load. '%s' - OK%n", path);
+				log.info("NativeLibLoader.load. '{}' - OK%n", path);
 			} catch (UnsatisfiedLinkError e) {
-				System.out.printf("NativeLibLoader.load: '%s' - %s%n", path, e.getMessage());
+				log.info("NativeLibLoader.load: '{}' - {}%n", path, e.getMessage());
 			}
 		}
 	}
