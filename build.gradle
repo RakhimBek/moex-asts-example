@@ -33,6 +33,8 @@ description = 'asts'
 sourceCompatibility = '1.8'
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
+sourceCompatibility = "11"
+targetCompatibility = "11"
 
 jar {
     jar.archiveFileName = 'test.jar'
