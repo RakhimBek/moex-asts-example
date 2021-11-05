@@ -79,11 +79,13 @@ public class SecuritiesFiller implements Filler {
 				.map(Map.Entry::getValue)
 				.collect(Collectors.joining("-"));
 
-		if (records.containsKey(currentKey)) {
+		this.currentRecord = records.get(currentKey);
+		if (currentRecord != null) {
 			return false;
 		}
 
-		this.currentRecord = records.putIfAbsent(currentKey, new Record());
+		this.currentRecord = new Record();
+		records.put(currentKey, this.currentRecord);
 		return true;
 	}
 
@@ -111,7 +113,7 @@ public class SecuritiesFiller implements Filler {
 	public void setFieldValue(final Meta.Field field, final Object o) {
 		fields.add(field.name());
 
-		records.get(currentKey).put(field.name(), Optional.ofNullable(o).map(Object::toString).orElse(null));
+		currentRecord.put(field.name(), Optional.ofNullable(o).map(Object::toString).orElse(null));
 	}
 
 	@Override
