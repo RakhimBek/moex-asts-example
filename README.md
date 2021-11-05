@@ -30,4 +30,4 @@ docs/ASTSConnectivity API Guide.pdf
 
 #### Описание таблиц интерфейса IFCBroker40:
 
-http://ftp.moex.com/pub/ClientsAPI/**ASTS**/Bridge_Interfaces/Equities/Equities40_Broker_Russian.htm
+http://ftp.moex.com/pub/ClientsAPI/ASTS/Bridge_Interfaces/Equities/Equities40_Broker_Russian.htm
