@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -55,7 +56,7 @@ public class SecuritiesFiller implements Filler {
 					.map(field -> {
 						final String value = row.get(field);
 						if (value != null) {
-							return value;
+							return new String(value.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 						}
 
 						return "";
