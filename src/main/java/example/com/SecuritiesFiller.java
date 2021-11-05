@@ -3,12 +3,31 @@ package example.com;
 import com.micex.client.Filler;
 import com.micex.client.Meta;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SecuritiesFiller implements Filler {
+	final File file = new File("securities.csv");
+
+	final FileWriter fileWriter = new FileWriter(file, Charset.forName("UTF-8"));
+	final Map<String, Record> records = new HashMap<>();
+	private final Map<String, String> currentKeys = new LinkedHashMap<>();
 	final Set<String> fields = new HashSet<>();
-	int recordDecimals;
+	private int currentRecordDecimals;
+	private String currentKey;
+	private Record currentRecord;
+
+	public SecuritiesFiller() throws IOException {
+	}
 
 	@Override
 	public boolean initTableUpdate(final Meta.Message message) {
@@ -19,56 +38,95 @@ public class SecuritiesFiller implements Filler {
 	@Override
 	public void doneTableUpdate(final Meta.Message message) {
 		System.out.printf("doneTableUpdate: %s%n", message.name());
+		System.out.println(fileWriter.getEncoding());
+		System.out.println(System.getProperty("file.encoding"));
 
-		fields.stream().sorted().forEach(System.out::println);
+		try {
+			fileWriter.write(String.join("\t", fields));
+			fileWriter.write(String.format("%n"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		records.forEach((key, row) -> {
+
+			final String csvRow = fields.stream()
+					.sorted()
+					.map(field -> {
+						final String value = row.get(field);
+						if (value != null) {
+							return value;
+						}
+
+						return "";
+					})
+					.collect(Collectors.joining("\t"));
+
+			try {
+				fileWriter.write(csvRow);
+				fileWriter.write(String.format("%n"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@Override
 	public boolean initRecordUpdate(final Meta.Message message) {
-		System.out.printf("initRecordUpdate: %s%n", message.name());
-		return false;
+		this.currentKey = currentKeys.entrySet().stream()
+				.sorted(Map.Entry.comparingByKey())
+				.map(Map.Entry::getValue)
+				.collect(Collectors.joining("-"));
+
+		if (records.containsKey(currentKey)) {
+			return false;
+		}
+
+		this.currentRecord = records.putIfAbsent(currentKey, new Record());
+		return true;
 	}
 
 	@Override
 	public void doneRecordUpdate(final Meta.Message message) {
-		System.out.printf("doneRecordUpdate: %s%n", message.name());
+		currentKeys.clear();
 	}
 
 	@Override
 	public int getRecordDecimals() {
-		System.out.printf("getRecordDecimals: %s%n", recordDecimals);
-		return recordDecimals;
+		return currentRecordDecimals;
 	}
 
 	@Override
 	public void setRecordDecimals(final int recordDecimals) {
-		System.out.printf("setRecordDecimals: %s%n", recordDecimals);
-		this.recordDecimals = recordDecimals;
+		this.currentRecordDecimals = recordDecimals;
 	}
 
 	@Override
 	public void setKeyValue(final Meta.Field field, final Object o) {
-		if (o == null) {
-			System.out.printf("setKeyValue: %s - null%n", field.name());
-		} else {
-			fields.add(field.name());
-			System.out.printf("setKeyValue: %s - %s(%s)%n", field.name(), o, o.getClass());
-		}
+		currentKeys.put(field.name(), Optional.ofNullable(o).map(Object::toString).orElse(null));
 	}
 
 	@Override
 	public void setFieldValue(final Meta.Field field, final Object o) {
-		if (o == null) {
-			System.out.printf("setFieldValue: %s - null%n", field.name());
-		} else {
-			fields.add(field.name());
-			System.out.printf("setFieldValue: %s - %s (%s)%n", field.name(), o, o.getClass());
-		}
+		fields.add(field.name());
+
+		records.get(currentKey).put(field.name(), Optional.ofNullable(o).map(Object::toString).orElse(null));
 	}
 
 	@Override
 	public void switchOrderbook(final Meta.Message message, final Meta.Ticker ticker) {
 		// for orderbook
-		System.out.println("switchOrderbook");
+	}
+
+	static class Record {
+		final Map<String, String> values = new LinkedHashMap<>();
+
+		public void put(String column, String value) {
+			values.put(column, value);
+		}
+
+		public String get(final String field) {
+			return values.get(field);
+		}
 	}
 }
