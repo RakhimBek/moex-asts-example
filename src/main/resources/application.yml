@@ -1,0 +1,13 @@
+asts:
+  params:
+    PACKETSIZE: 60000
+    INTERFACE: IFCBroker40
+    SERVER: UAT_GATEWAY
+    SERVICE: 16411/16412
+    BROADCAST: 91.208.232.211
+    USERID: "***"
+    PASSWORD: "***"
+    LANGUAGE: English
+    LOG_FOLDER: /log/
+    LOGGING: 4,2
+    LOGLEVEL: 30
